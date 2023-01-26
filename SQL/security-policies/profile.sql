@@ -5,7 +5,7 @@ CREATE POLICY profile_select
 ON public.profile
 AS PERMISSIVE
 FOR SELECT TO authenticated USING (
-  auth.uid() = id
+  true
 );
 
 DROP POLICY IF EXISTS profile_update on public.profile;

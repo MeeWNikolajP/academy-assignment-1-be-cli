@@ -1,0 +1,24 @@
+CREATE OR REPLACE FUNCTION handle_new_user()
+    RETURNS TRIGGER AS $$
+begin
+  insert into public.profile (id, email, fullname, phonenumber, birthday)
+  -- Reference the newly created `id`
+  values (
+    new.id, 
+    new.raw_user_meta_data ->> 'email', 
+    new.raw_user_meta_data ->> 'fullname',
+    new.raw_user_meta_data ->> 'phonenumber',
+    new.raw_user_meta_data ->> 'birthday');
+  return new;
+end
+
+-- Return the function
+$$ language 'plpgsql' security definer;
+
+DROP TRIGGER IF EXISTS on_auth_user_created ON auth.users;
+
+CREATE TRIGGER on_auth_user_created
+AFTER INSERT
+ON auth.users
+FOR EACH ROW
+EXECUTE PROCEDURE handle_new_user();

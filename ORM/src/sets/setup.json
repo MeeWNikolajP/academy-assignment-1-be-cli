@@ -1,6 +1,1 @@
-[
-  "populate/scripts/**/*.ts",
-  "SQL/functions/has-permission.sql",
-  "SQL/indexes/roles-and-permissions.sql",
-  "SQL/security-policies/**/*.sql"
-]
+["populate/scripts/**/*.ts", "SQL/functions/has-permission.sql", "SQL/indexes/roles-and-permissions.sql", "SQL/security-policies/**/*.sql"]

@@ -31,30 +31,30 @@ export const clear = async (dataSource: DataSource) => {
 };
 
 /**
-* -- Clear --
-*
-* Clears the database and removes auth users
-*/
+ * -- Clear --
+ *
+ * Clears the database and removes auth users
+ */
 
 export const drop = async (dataSource: DataSource) => {
- if (!dataSource.isInitialized) {
-   await dataSource.initialize();
- }
- const tableNames = dataSource.entityMetadatas.map((entity) => entity.tableName);
+  if (!dataSource.isInitialized) {
+    await dataSource.initialize();
+  }
+  const tableNames = dataSource.entityMetadatas.map((entity) => entity.tableName);
 
- await dataSource.transaction(async (manager) => {
-   for (const tableName of tableNames) {
-     await manager.query(`DROP TABLE "${tableName}" RESTART IDENTITY CASCADE;`);
-   }
- });
+  await dataSource.transaction(async (manager) => {
+    for (const tableName of tableNames) {
+      await manager.query(`DROP TABLE "${tableName}" CASCADE;`);
+    }
+  });
 
- console.log('Removing auth users');
- const listResponse = await supabase.auth.admin.listUsers();
+  console.log('Removing auth users');
+  const listResponse = await supabase.auth.admin.listUsers();
 
- for (const user of listResponse.data.users) {
-   await supabase.auth.admin.deleteUser(user.id);
- }
- console.log('Removed all auth users');
+  for (const user of listResponse.data.users) {
+    await supabase.auth.admin.deleteUser(user.id);
+  }
+  console.log('Removed all auth users');
 };
 
 /**
@@ -78,17 +78,17 @@ export const executeSet = async (dataSource: DataSource, path: string, options?:
 
   await dataSource.transaction(async (manager) => {
     for (const item of set) {
-      if(item.endsWith('**/*.ts')) {
+      if (item.endsWith('**/*.ts')) {
         const files = filesInFolder(__dirname + '/../' + item.replace('**/*.ts', ''));
 
-        for(const file of files) {
+        for (const file of files) {
           const module = await import(__dirname + '/../' + item.replace('**/*.ts', '') + file);
           await module.execute(manager);
         }
-      } else if(item.endsWith('**/*.sql')) {
+      } else if (item.endsWith('**/*.sql')) {
         const files = filesInFolder(__dirname + '/../../../' + item.replace('**/*.sql', ''));
 
-        for(const file of files) {
+        for (const file of files) {
           const sql = fs.readFileSync(__dirname + '/../../../' + item.replace('**/*.sql', '') + file);
           await manager.query(sql.toString());
         }

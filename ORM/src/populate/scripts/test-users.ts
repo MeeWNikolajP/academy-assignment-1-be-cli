@@ -12,18 +12,20 @@ export const execute: PopulateScriptExecutor = async (manager: EntityManager) =>
   const userRole = await manager.findOne(Role, { where: { name: 'user' } });
 
   const adminProfile = new Profile();
-  adminProfile.first_name = 'Bob';
-  adminProfile.last_name = 'Dylan';
-  adminProfile.age = 20;
+  adminProfile.email = 'test1@mail.dk';
+  adminProfile.fullname = 'Bob Marley';
+  adminProfile.phonenumber = '+4524682468';
+  adminProfile.birthday = '1997-07-09';
   adminProfile.roles = [adminRole];
   adminProfile.id = authUser1.id;
 
   await manager.save(adminProfile);
 
   const profile = new Profile();
-  profile.first_name = 'Bob';
-  profile.last_name = 'Marley';
-  profile.age = 24;
+  profile.email = 'test1@mail.dk';
+  profile.fullname = 'Barack Obama';
+  profile.phonenumber = '+4512345678';
+  profile.birthday = '1965-02-03';
   profile.roles = [userRole];
   profile.id = authUser2.id;
 

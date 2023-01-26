@@ -15,13 +15,16 @@ export class Profile {
   id: string;
 
   @Column()
-  first_name: string;
+  email: string;
 
   @Column()
-  last_name: string;
+  fullname: string;
 
   @Column()
-  age: number;
+  phonenumber: string;
+
+  @Column()
+  birthday: string;
 
   @Column({ default: false })
   subscription_active: boolean;
